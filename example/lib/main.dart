@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:radio_button/radio_button.dart';
 
 void main() {
   runApp(const TestWidget());
@@ -12,6 +13,8 @@ class TestWidget extends StatefulWidget {
 }
 
 class _TestWidgetState extends State<TestWidget> {
+  String groupId = "groupId";
+  
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -22,10 +25,27 @@ class _TestWidgetState extends State<TestWidget> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          title: const Text("RadioButton"),
+          title: const Text("KG RadioButton"),
           centerTitle: true,
         ),
-        body: Placeholder(),
+        body: Column(
+          children: [
+            Text("groupId:$groupId"),
+            RadioGroup(
+              onChanged: (value) {
+                debugPrint("value.............:$value");
+                setState(() {
+                  groupId = value;
+                });
+              },
+              groupId: groupId,
+              children: [
+                RadioButton(value: "TEST1", mainTitle: Text("test1")),
+                RadioButton(value: "TEST2", mainTitle: Text("test2"))
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
