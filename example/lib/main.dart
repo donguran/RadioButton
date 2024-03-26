@@ -28,25 +28,51 @@ class _TestWidgetState extends State<TestWidget> {
           title: const Text("KG RadioButton"),
           centerTitle: true,
         ),
-        body: Column(
+        body: radioWidget(),
+      ),
+    );
+  }
+
+  Widget test() {
+    return Column(
+      children: [
+        Text("test"),
+        Row(
           children: [
-            Text("groupId:$groupId"),
-            RadioGroup(
-              onChanged: (value) {
-                debugPrint("value.............:$value");
-                setState(() {
-                  groupId = value;
-                });
-              },
-              groupId: groupId,
-              children: [
-                RadioButton(value: "TEST1", mainTitle: Text("test1")),
-                RadioButton(value: "TEST2", mainTitle: Text("test2"))
-              ],
+            Flexible(child: ListTile(
+              title: Text("test1"),
+              leading: Icon(Icons.add),
+              subtitle: Text("sub"),
+            )),
+            Flexible(child: ListTile(title: Text("test1"), )),
+            Flexible(child: ListTile(title: Text("test1"), )),
+            Flexible(child: ListTile(title: Text("test1"), )),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget radioWidget() {
+    return Column(
+      children: [
+        Text("groupId:$groupId"),
+        RadioGroup(
+          onChanged: (value) {
+            debugPrint("value.............:$value");
+            groupId = value;
+          },
+          orientation: RadioOrientation.vertical,
+          groupId: groupId,
+          children: [
+            RadioButton(value: "TEST1", mainTitle: Text("test1")),
+            RadioButton(value: "TEST2", mainTitle: Text("test2")),
+            RadioButton(value: "TEST3", mainTitle: Text("test3"),
+              selectedIcon: Icon(Icons.check_box),
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 }
