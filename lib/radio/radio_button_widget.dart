@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:radio_button/radio/radio_fit.dart';
 import 'package:radio_button/radio/radio_group_widget.dart';
 import 'package:radio_button/radio/radio_orientation.dart';
@@ -11,6 +10,8 @@ class RadioButton<T> extends StatefulWidget {
     required this.value,
     required this.content,
     this.onChanged,
+    this.useIcon = true,
+    this.selectedColor,
     this.fit = RadioFit.match,
     this.width,
     this.height,
@@ -25,7 +26,9 @@ class RadioButton<T> extends StatefulWidget {
     this.align = MainAxisAlignment.start,
   });
 
-  /// if you setting RadioButton's [groupId]
+  /// if you use RadioButton's [groupId]
+  /// must use [onChanged] and mange state.
+  ///
   /// unselected when RadioButton's value do not matched [groupId],
   /// selected when RadioButton's value matched [groupId].
   ///
@@ -36,7 +39,7 @@ class RadioButton<T> extends StatefulWidget {
   final T value;
 
   /// [content] RadioButton main content
-  final Widget? content;
+  final Widget content;
 
   /// [width] RadioButton's width size
   final double? width;
@@ -87,6 +90,12 @@ class RadioButton<T> extends StatefulWidget {
   /// [RadioFit.wrap] is Fitted RadioButton Widget.
   /// resize your children widgets size.
   final RadioFit fit;
+
+
+  final bool useIcon;
+
+
+  final Color? selectedColor;
 
   /// this Property use only in RadioGroup do self.
   ///
@@ -139,7 +148,7 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
 
   Widget radioButtonBase() {
     return InkWell(
-      onTap: widget.entireTouchable ? () {
+      onTap: widget.entireTouchable || !widget.useIcon ? () {
         radioGroupProvider?.change(widget.value);
       } : null,
       child: Container(
@@ -147,9 +156,11 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
         height: widget.height,
         padding: widget.padding,
         decoration: widget.decoration,
+        color: !widget.useIcon ? Colors.grey : null,
         child: Row(
           mainAxisAlignment: widget.align,
           children: [
+            widget.useIcon ?
             IconButton(
               icon: radioGroupProvider != null
                   ? iconExistRadioGroupProvider()
@@ -163,8 +174,8 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
               highlightColor: widget.radioHighLightColor,
               color: widget.iconColor,
               disabledColor: widget.iconColor,
-            ),
-            widget.content ?? const SizedBox(),
+            ) : const SizedBox(),
+            widget.content,
           ]
         ),
       ),
