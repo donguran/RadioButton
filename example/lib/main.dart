@@ -54,6 +54,8 @@ class _RadioExampleState extends State<RadioExample> {
 
         const Divider(),
 
+
+        Text("groupId2:$groupId2"),
         RadioGroup(
           groupId: "groupId",
           onChanged: (value) {
@@ -73,29 +75,6 @@ class _RadioExampleState extends State<RadioExample> {
             )
           ],
         ),
-
-        const Divider(),
-
-        RadioGroup(
-          groupId: "groupId",
-          onChanged: (value) {
-            setState(() {
-              groupId3 = value;
-            });
-          },
-          children: [
-            RadioButton(value: "radio1", content: const Text("Radio1"),
-              useIcon: false,
-            ),
-            RadioButton(value: "radio2", content: const Text("Radio2"),
-              useIcon: false,
-            ),
-            RadioButton(value: "radio3", content: const Text("Radio3"),
-              useIcon: true,
-            )
-          ],
-        )
-
       ],
     );
   }

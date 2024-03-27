@@ -10,8 +10,10 @@ class RadioButton<T> extends StatefulWidget {
     required this.value,
     required this.content,
     this.onChanged,
-    this.useIcon = true,
-    this.selectedColor,
+    // this.useIcon = true,
+    // this.selectedColor,
+    // this.unselectedColor,
+    this.splashColor,
     this.fit = RadioFit.match,
     this.width,
     this.height,
@@ -91,11 +93,19 @@ class RadioButton<T> extends StatefulWidget {
   /// resize your children widgets size.
   final RadioFit fit;
 
-
+  /*/// RadioBotton's leading(left) icon use [useIcon]
+  /// false → INVISIBLE
+  /// (default) true → VISIBLE
   final bool useIcon;
 
-
+  /// if you defined false to [useIcon]
+  /// you define this [selectedColor]
   final Color? selectedColor;
+
+  final Color? unselectedColor;*/
+
+  /// [splashColor] touched ripple Effect to RadioButton
+  final Color? splashColor;
 
   /// this Property use only in RadioGroup do self.
   ///
@@ -148,19 +158,18 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
 
   Widget radioButtonBase() {
     return InkWell(
-      onTap: widget.entireTouchable || !widget.useIcon ? () {
+      onTap: widget.entireTouchable ? () {
         radioGroupProvider?.change(widget.value);
       } : null,
+      splashColor: widget.splashColor,
       child: Container(
         width: widget.width,
         height: widget.height,
         padding: widget.padding,
         decoration: widget.decoration,
-        color: !widget.useIcon ? Colors.grey : null,
         child: Row(
           mainAxisAlignment: widget.align,
           children: [
-            widget.useIcon ?
             IconButton(
               icon: radioGroupProvider != null
                   ? iconExistRadioGroupProvider()
@@ -174,7 +183,7 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
               highlightColor: widget.radioHighLightColor,
               color: widget.iconColor,
               disabledColor: widget.iconColor,
-            ) : const SizedBox(),
+            ),
             widget.content,
           ]
         ),
@@ -198,6 +207,14 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
           : unselectedIconWidget()
         : unselectedIconWidget();
   }
+
+  // Color selectedColor() {
+  //   return widget.selectedColor ?? Theme.of(context).primaryColor;
+  // }
+  //
+  // Color unselectedColor() {
+  //   return widget.unselectedColor ?? Theme.of(context).unselectedWidgetColor;
+  // }
 
   Icon selectedIconWidget() {
     return widget.selectedIcon ?? const Icon(Icons.radio_button_on_outlined,);
