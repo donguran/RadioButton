@@ -1,78 +1,84 @@
+import 'package:example/helper_widget/title_box_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:radio_button/radio_button.dart';
 
 void main() {
-  runApp(const TestWidget());
+  runApp(MaterialApp(
+    title: 'RadioButton Example',
+    theme: ThemeData(
+      colorScheme: ColorScheme.fromSeed(seedColor: Colors.orangeAccent),
+      useMaterial3: true,
+    ),
+    home: Scaffold(
+      appBar: AppBar(
+        title: const Text("donguran RadioButton"),
+        centerTitle: true,
+      ),
+      body: const RadioExample(),
+    ),
+  ));
 }
 
-class TestWidget extends StatefulWidget {
-  const TestWidget({super.key});
+class RadioExample extends StatefulWidget {
+  const RadioExample({super.key});
 
   @override
-  State<TestWidget> createState() => _TestWidgetState();
+  State<RadioExample> createState() => _RadioExampleState();
 }
 
-class _TestWidgetState extends State<TestWidget> {
-  String groupId = "groupId";
-  
+class _RadioExampleState extends State<RadioExample> {
+  late RadioSampleGroupId groupId;
+
+  @override
+  void initState() {
+    super.initState();
+
+    groupId = RadioSampleGroupId.radio1;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'RadioButton Example',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.orangeAccent),
-        useMaterial3: true,
-      ),
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text("KG RadioButton"),
-          centerTitle: true,
-        ),
-        body: radioWidget(),
-      ),
-    );
-  }
-
-  Widget test() {
     return Column(
       children: [
-        Text("test"),
-        Row(
-          children: [
-            Flexible(child: ListTile(
-              title: Text("test1"),
-              leading: Icon(Icons.add),
-              subtitle: Text("sub"),
-            )),
-            Flexible(child: ListTile(title: Text("test1"), )),
-            Flexible(child: ListTile(title: Text("test1"), )),
-            Flexible(child: ListTile(title: Text("test1"), )),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget radioWidget() {
-    return Column(
-      children: [
-        Text("groupId:$groupId"),
+        const TitleBoxWidget("Vertical"),
         RadioGroup(
           onChanged: (value) {
-            debugPrint("value.............:$value");
-            groupId = value;
+            debugPrint("RadioGroup result:$value");
           },
-          orientation: RadioOrientation.vertical,
           groupId: groupId,
+          orientation: RadioOrientation.vertical,
           children: [
-            RadioButton(value: "TEST1", mainTitle: Text("test1")),
-            RadioButton(value: "TEST2", mainTitle: Text("test2")),
-            RadioButton(value: "TEST3", mainTitle: Text("test3"),
-              selectedIcon: Icon(Icons.check_box),
+            RadioButton(value: RadioSampleGroupId.radio1, mainTitle: const Text("radio1")),
+            RadioButton(value: RadioSampleGroupId.radio2, mainTitle: const Text("radio2")),
+            RadioButton(
+              value: RadioSampleGroupId.radio3,
+              mainTitle: const Text("radio3"),
+              entireTouchable: true,
             ),
           ],
         ),
+        const Divider(),
+        const TitleBoxWidget("Horizontal"),
+        RadioGroup(
+          groupId: groupId,
+          children: [
+            RadioButton(value: RadioSampleGroupId.radio1, mainTitle: const Text("radio1"),),
+            RadioButton(value: RadioSampleGroupId.radio2, mainTitle: const Text("radio1"),),
+            RadioButton(value: RadioSampleGroupId.radio3, mainTitle: const Text("radio1"),),
+            RadioButton(value: RadioSampleGroupId.radio4, mainTitle: const Text("radio1"),),
+            RadioButton(value: RadioSampleGroupId.radio5, mainTitle: const Text("radio1"),),
+          ],
+        )
       ],
     );
   }
+}
+
+
+enum RadioSampleGroupId {
+  radio1,
+  radio2,
+  radio3,
+  radio4,
+  radio5,
 }

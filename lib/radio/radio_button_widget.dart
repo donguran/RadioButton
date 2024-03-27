@@ -2,97 +2,150 @@ import 'package:flutter/material.dart';
 import 'package:radio_button/radio/radio_group_widget.dart';
 import 'package:radio_button/radio/radio_orientation.dart';
 
-class RadioButton<T> extends StatelessWidget {
+/// same [groupId]
+class RadioButton<T> extends StatefulWidget {
   RadioButton({
     super.key,
     this.groupId,
     required this.value,
     required this.mainTitle,
     this.subTitle,
-    this.radioGroupProvider,
+    this.onChanged,
+    this.enabled = true,
     this.selectedIcon,
     this.unselectedIcon,
-    this.radioHighLightColor
-  }) {
-    debugPrint("RadioButton 생성");
-  }
+    this.iconColor = Colors.blueAccent,
+    this.radioHighLightColor,
+    this.entireTouchable = false,
+    this.padding,
+  });
 
-  T? groupId;
+  /// if you setting RadioButton's [groupId]
+  /// unselected when RadioButton's value do not matched [groupId],
+  /// selected when RadioButton's value matched [groupId].
+  ///
+  /// priority properties [radioGroupProvider] > [groupId]
+  final T? groupId;
+
+  /// RadioButton's identify [value].
   final T value;
   final Widget? mainTitle;
   final Widget? subTitle;
-  RadioGroupProvider? radioGroupProvider;
+
+  /// radio button [enabled]
+  final bool enabled;
 
   /// default icon:Icon(Icons.radio_button_on_outlined)
-  Icon? selectedIcon;
+  final Icon? selectedIcon;
 
   /// default icon:Icon(Icons.radio_button_off_outlined)
-  Icon? unselectedIcon;
+  final Icon? unselectedIcon;
+
+  final Color iconColor;
 
   /// if you want change radioButton pressed color.
   /// you should change this [radioHighLightColor].
-  Color? radioHighLightColor;
+  final Color? radioHighLightColor;
+
+  /// if [entireTouchable] is true, it can possible pressed RadioButton Widget.
+  /// but if it was false, it can only pressed RadioButton Icon Widget.
+  final bool entireTouchable;
+
+  final Function(dynamic value)? onChanged;
+
+  final EdgeInsetsGeometry? padding;
+
+  RadioGroupProvider? radioGroupProvider;
+
+  @override
+  State<RadioButton<T>> createState() => _RadioButtonState<T>();
+}
+
+class _RadioButtonState<T> extends State<RadioButton<T>> {
+  RadioGroupProvider? radioGroupProvider;
+  late RadioOrientation orientation;
+  Color? iconColor;
+
+  @override
+  void initState() {
+    super.initState();
+
+    debugPrint("[RadioButton].. initState..");
+    radioGroupProvider = widget.radioGroupProvider;
+    orientation = radioGroupProvider?.orientation ?? RadioOrientation.vertical;
+  }
 
   @override
   Widget build(BuildContext context) {
     debugPrint("[RadioButton].. build..");
-    return radioGroupProvider?.orientation == RadioOrientation.vertical
+    return orientation == RadioOrientation.vertical
         ? _verticalRadioButton()
         : _horizontalRadioButton();
   }
 
   /// [RadioOrientation.horizontal]
   Widget _verticalRadioButton() {
-    debugPrint("_verticalRadiOButton............");
-    return ListTile(
-      leading: IconButton(
-        icon: radioGroupProvider != null
-            ? ListenableBuilder(
-          listenable: radioGroupProvider!,
-          builder:(context, child) => radioGroupProvider!.isEqual(value)
-              ? _selectedIconWidget()
-              : _unselectedIconWidget(),
-        )
-            : _unselectedIconWidget(),
-        onPressed: () {
-          radioGroupProvider?.change(value);
-        },
-        highlightColor: radioHighLightColor,
-      ),
-      title: mainTitle,
-      subtitle: subTitle,
-    );
+    debugPrint("_verticalRadioButton..");
+    return radioButtonBase();
   }
 
+  /// it this RadioButton do not used in RadioGroup
+  /// Flex Widget will make hasSize Error
   Widget _horizontalRadioButton() {
-    debugPrint("_horizontalRadiOButton............");
-    return Expanded(
+    debugPrint("_horizontalRadioButton..");
+    return Expanded(child: radioButtonBase());
+  }
+
+  Widget radioButtonBase() {
+    return InkWell(
+      onTap: widget.entireTouchable ? () {
+        radioGroupProvider?.change(widget.value);
+      } : null,
       child: ListTile(
         leading: IconButton(
           icon: radioGroupProvider != null
-              ? ListenableBuilder(
-            listenable: radioGroupProvider!,
-            builder:(context, child) => radioGroupProvider!.isEqual(value)
-                ? _selectedIconWidget()
-                : _unselectedIconWidget(),
-          )
-              : _unselectedIconWidget(),
-          onPressed: () {
-            radioGroupProvider?.change(value);
-          },
-          highlightColor: radioHighLightColor,
+              ? iconExistRadioGroupProvider()
+              : iconNotExistRadioGroupProvider(),
+          onPressed: !widget.entireTouchable ? () {
+            radioGroupProvider?.change(widget.value);
+            if (widget.onChanged != null) {
+              widget.onChanged!(widget.value);
+            }
+          } : null,
+          highlightColor: widget.radioHighLightColor,
+          color: widget.iconColor,
+          disabledColor: widget.iconColor,
         ),
-        title: mainTitle,
-        subtitle: subTitle,
+        title: widget.mainTitle,
+        subtitle: widget.subTitle,
+
+        contentPadding: widget.padding,
       ),
     );
   }
 
-  Icon _selectedIconWidget() {
-    return selectedIcon ?? const Icon(Icons.radio_button_on_outlined,);
+  Widget iconExistRadioGroupProvider() {
+    return ListenableBuilder(
+      listenable: radioGroupProvider!,
+      builder:(context, child) => radioGroupProvider!.isEqual(widget.value)
+          ? selectedIconWidget()
+          : unselectedIconWidget(),
+    );
   }
 
-  Icon _unselectedIconWidget() {
-    return unselectedIcon ?? const Icon(Icons.radio_button_off_outlined);
+  Widget iconNotExistRadioGroupProvider() {
+    return widget.groupId != null
+        ? widget.groupId! == widget.value
+          ? selectedIconWidget()
+          : unselectedIconWidget()
+        : unselectedIconWidget();
+  }
+
+  Icon selectedIconWidget() {
+    return widget.selectedIcon ?? const Icon(Icons.radio_button_on_outlined,);
+  }
+
+  Icon unselectedIconWidget() {
+    return widget.unselectedIcon ?? const Icon(Icons.radio_button_off_outlined);
   }
 }
