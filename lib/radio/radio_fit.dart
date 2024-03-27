@@ -1,0 +1,4 @@
+enum RadioFit {
+  wrap,
+  match,
+}

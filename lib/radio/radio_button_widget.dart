@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:radio_button/radio/radio_fit.dart';
 import 'package:radio_button/radio/radio_group_widget.dart';
 import 'package:radio_button/radio/radio_orientation.dart';
 
-/// same [groupId]
 class RadioButton<T> extends StatefulWidget {
   RadioButton({
     super.key,
     this.groupId,
     required this.value,
-    required this.mainTitle,
-    this.subTitle,
+    required this.content,
     this.onChanged,
+    this.fit = RadioFit.match,
+    this.width,
+    this.height,
+    this.decoration,
     this.enabled = true,
     this.selectedIcon,
     this.unselectedIcon,
@@ -18,6 +22,7 @@ class RadioButton<T> extends StatefulWidget {
     this.radioHighLightColor,
     this.entireTouchable = false,
     this.padding,
+    this.align = MainAxisAlignment.start,
   });
 
   /// if you setting RadioButton's [groupId]
@@ -29,18 +34,30 @@ class RadioButton<T> extends StatefulWidget {
 
   /// RadioButton's identify [value].
   final T value;
-  final Widget? mainTitle;
-  final Widget? subTitle;
+
+  /// [content] RadioButton main content
+  final Widget? content;
+
+  /// [width] RadioButton's width size
+  final double? width;
+
+  /// [height] RadioButton's height size
+  final double? height;
+
+  /// [decoration] RadioButton frame custom
+  /// color, border, radius..
+  final BoxDecoration? decoration;
 
   /// radio button [enabled]
   final bool enabled;
 
-  /// default icon:Icon(Icons.radio_button_on_outlined)
+  /// [selectedIcon] default icon:Icon(Icons.radio_button_on_outlined)
   final Icon? selectedIcon;
 
-  /// default icon:Icon(Icons.radio_button_off_outlined)
+  /// [unselectedIcon] default icon:Icon(Icons.radio_button_off_outlined)
   final Icon? unselectedIcon;
 
+  /// [iconColor] RadioButton Icon's default Color setting.
   final Color iconColor;
 
   /// if you want change radioButton pressed color.
@@ -51,10 +68,30 @@ class RadioButton<T> extends StatefulWidget {
   /// but if it was false, it can only pressed RadioButton Icon Widget.
   final bool entireTouchable;
 
+  /// If you need individual RadioButton's onChanged actions.
+  /// use this [onChanged]
+  ///
+  /// but If you use RadioButton into RadioGroup.
+  /// you don't use this RadioButtons' [onChanged]
+  /// use RadioGroup's [RadioGroup.onChanged] method.
   final Function(dynamic value)? onChanged;
 
+  /// [padding] widgets in RadioButton
+  /// return type [EdgeInsetsGeometry]
   final EdgeInsetsGeometry? padding;
 
+  /// [align] widgets in RadioButton
+  final MainAxisAlignment align;
+
+  /// [fit] is default : [RadioFit.match]
+  /// [RadioFit.wrap] is Fitted RadioButton Widget.
+  /// resize your children widgets size.
+  final RadioFit fit;
+
+  /// this Property use only in RadioGroup do self.
+  ///
+  /// [radioGroupProvider] you don't worried this.
+  /// I talled one more This property use only in RadioGroup do self.
   RadioGroupProvider? radioGroupProvider;
 
   @override
@@ -86,14 +123,18 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
   /// [RadioOrientation.horizontal]
   Widget _verticalRadioButton() {
     debugPrint("_verticalRadioButton..");
-    return radioButtonBase();
+    return widget.fit == RadioFit.wrap
+        ? FittedBox(child: radioButtonBase())
+        : radioButtonBase();
   }
 
   /// it this RadioButton do not used in RadioGroup
   /// Flex Widget will make hasSize Error
   Widget _horizontalRadioButton() {
     debugPrint("_horizontalRadioButton..");
-    return Expanded(child: radioButtonBase());
+    return widget.fit == RadioFit.wrap
+        ? FittedBox(child: Expanded(child: radioButtonBase()))
+        : Expanded(child: radioButtonBase());
   }
 
   Widget radioButtonBase() {
@@ -101,25 +142,31 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
       onTap: widget.entireTouchable ? () {
         radioGroupProvider?.change(widget.value);
       } : null,
-      child: ListTile(
-        leading: IconButton(
-          icon: radioGroupProvider != null
-              ? iconExistRadioGroupProvider()
-              : iconNotExistRadioGroupProvider(),
-          onPressed: !widget.entireTouchable ? () {
-            radioGroupProvider?.change(widget.value);
-            if (widget.onChanged != null) {
-              widget.onChanged!(widget.value);
-            }
-          } : null,
-          highlightColor: widget.radioHighLightColor,
-          color: widget.iconColor,
-          disabledColor: widget.iconColor,
+      child: Container(
+        width: widget.width,
+        height: widget.height,
+        padding: widget.padding,
+        decoration: widget.decoration,
+        child: Row(
+          mainAxisAlignment: widget.align,
+          children: [
+            IconButton(
+              icon: radioGroupProvider != null
+                  ? iconExistRadioGroupProvider()
+                  : iconNotExistRadioGroupProvider(),
+              onPressed: !widget.entireTouchable ? () {
+                radioGroupProvider?.change(widget.value);
+                if (widget.onChanged != null) {
+                  widget.onChanged!(widget.value);
+                }
+              } : null,
+              highlightColor: widget.radioHighLightColor,
+              color: widget.iconColor,
+              disabledColor: widget.iconColor,
+            ),
+            widget.content ?? const SizedBox(),
+          ]
         ),
-        title: widget.mainTitle,
-        subtitle: widget.subTitle,
-
-        contentPadding: widget.padding,
       ),
     );
   }

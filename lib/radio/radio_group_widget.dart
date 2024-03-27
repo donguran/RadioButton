@@ -24,6 +24,18 @@ class RadioGroup<T> extends StatefulWidget {
   ///
   /// so please register same type.
   final List<Widget> children;
+
+  /// [onChanged] manages all about included RadioButton.
+  /// parameter [value] is changed [groupId]
+  ///
+  /// but more kinds of functions.
+  /// If you want change value into otherValue.
+  ///
+  /// like this,
+  /// [onChanged] : (value) {
+  ///   setState(() {
+  ///     [otherValue] = [value];
+  ///   })
   final Function(dynamic value)? onChanged;
 
   /// default [orientation] : [RadioOrientation.horizontal]
@@ -97,17 +109,21 @@ class RadioGroupProvider<T> extends ChangeNotifier {
   RadioOrientation orientation = RadioOrientation.vertical;
 
   void changeNotNotify(T value) {
-    radioGroupId = value;
+    if (radioGroupId.runtimeType == value.runtimeType) {
+      radioGroupId = value;
+    }
   }
 
   void change(T value) {
-    radioGroupId = value;
+    if (radioGroupId.runtimeType == value.runtimeType) {
+      radioGroupId = value;
 
-    if (onChanged != null) {
-      onChanged!(value);
+      if (onChanged != null) {
+        onChanged!(value);
+      }
+
+      notifyListeners();
     }
-
-    notifyListeners();
   }
 
   bool isEqual(T value) => radioGroupId == value;

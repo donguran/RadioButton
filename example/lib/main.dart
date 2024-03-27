@@ -28,6 +28,7 @@ class RadioExample extends StatefulWidget {
 
 class _RadioExampleState extends State<RadioExample> {
   late RadioSampleGroupId groupId;
+  String groupIdStr = "groupIdStr";
 
   @override
   void initState() {
@@ -42,38 +43,56 @@ class _RadioExampleState extends State<RadioExample> {
       children: [
         const TitleBoxWidget("Vertical"),
         RadioGroup(
-          onChanged: (value) {
-            debugPrint("RadioGroup result:$value");
-          },
           groupId: groupId,
           orientation: RadioOrientation.vertical,
           children: [
-            RadioButton(value: RadioSampleGroupId.radio1, mainTitle: const Text("radio1")),
-            RadioButton(value: RadioSampleGroupId.radio2, mainTitle: const Text("radio2")),
-            RadioButton(
-              value: RadioSampleGroupId.radio3,
-              mainTitle: const Text("radio3"),
-              entireTouchable: true,
+            RadioButton(value: RadioSampleGroupId.radio1, content: const Text("radio1")),
+            RadioButton(value: RadioSampleGroupId.radio2, content: const Text("radio2")),
+            RadioButton(value: RadioSampleGroupId.radio3, content: const Text("radio3"),
             ),
           ],
         ),
         const Divider(),
         const TitleBoxWidget("Horizontal"),
         RadioGroup(
+          onChanged: (value) {
+            debugPrint(value.toString());
+          },
           groupId: groupId,
           children: [
-            RadioButton(value: RadioSampleGroupId.radio1, mainTitle: const Text("radio1"),),
-            RadioButton(value: RadioSampleGroupId.radio2, mainTitle: const Text("radio1"),),
-            RadioButton(value: RadioSampleGroupId.radio3, mainTitle: const Text("radio1"),),
-            RadioButton(value: RadioSampleGroupId.radio4, mainTitle: const Text("radio1"),),
-            RadioButton(value: RadioSampleGroupId.radio5, mainTitle: const Text("radio1"),),
+            RadioButton(value: RadioSampleGroupId.radio1, content: const Text("1"),),
+            RadioButton(value: RadioSampleGroupId.radio2, content: const Text("2"),),
+            RadioButton(value: RadioSampleGroupId.radio3, content: const Text("3"),),
+            RadioButton(value: RadioSampleGroupId.radio4, content: const Text("4"),),
+            RadioButton(value: RadioSampleGroupId.radio5, content: const Text("5"),),
+          ],
+        ),
+
+        const Divider(),
+        const TitleBoxWidget("Multi"),
+        Column(
+          children: [
+            RadioGroup(
+              groupId: groupIdStr,
+              children: [
+                RadioButton(value: "radio1", content: const Text("Radio1")),
+                RadioButton(value: "radio2", content: const Text("Radio2")),
+              ],
+            ),
+            RadioGroup(
+              groupId: groupIdStr,
+              children: [
+                RadioButton(value: "radio3", content: const Text("Radio3")),
+                RadioButton(value: "radio4", content: const Text("Radio4")),
+                RadioButton(value: "radio5", content: const Text("Radio5")),
+              ]
+            )
           ],
         )
       ],
     );
   }
 }
-
 
 enum RadioSampleGroupId {
   radio1,
