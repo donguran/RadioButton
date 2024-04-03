@@ -3,16 +3,16 @@ import 'package:radio_button/radio/radio_button_widget.dart';
 import 'package:radio_button/radio/radio_orientation.dart';
 
 class RadioGroup<T> extends StatefulWidget {
-  const RadioGroup({
-    super.key,
-    required this.groupId,
-    required this.children,
-    this.onChanged,
-    this.orientation = RadioOrientation.horizontal,
-    this.checkedValue
-  });
+  const RadioGroup(
+      {super.key,
+      required this.groupId,
+      required this.children,
+      this.onChanged,
+      this.orientation = RadioOrientation.horizontal,
+      this.checkedValue});
 
   /// [groupId] radio action result
+  /// because this use reason is type check values.
   final T groupId;
 
   /// [checkedValue] is checked RadioButton created RadioGroup.
@@ -54,9 +54,7 @@ class _RadioGroupState extends State<RadioGroup> {
     // debugPrint("[RadioGroup].. initState..");
 
     radioGroupProvider = RadioGroupProvider._(
-      radioGroupId: widget.groupId,
-      onChanged: widget.onChanged
-    );
+        radioGroupId: widget.groupId, onChanged: widget.onChanged);
 
     for (var item in widget.children) {
       if (item is RadioButton) {
@@ -93,16 +91,17 @@ class _RadioGroupState extends State<RadioGroup> {
     // debugPrint("[RadioGroup].. build.. orientation:${widget.orientation}");
 
     return widget.orientation == RadioOrientation.horizontal
-        ? Row(children: widget.children,)
-        : Column(children: widget.children,);
+        ? Row(
+            children: widget.children,
+          )
+        : Column(
+            children: widget.children,
+          );
   }
 }
 
 class RadioGroupProvider<T> extends ChangeNotifier {
-  RadioGroupProvider._({
-    required this.radioGroupId,
-    this.onChanged
-  });
+  RadioGroupProvider._({required this.radioGroupId, this.onChanged});
 
   T radioGroupId;
   Function(dynamic value)? onChanged;

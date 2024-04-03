@@ -158,35 +158,36 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
 
   Widget radioButtonBase() {
     return InkWell(
-      onTap: widget.entireTouchable ? () {
-        radioGroupProvider?.change(widget.value);
-      } : null,
+      onTap: widget.entireTouchable
+          ? () {
+              radioGroupProvider?.change(widget.value);
+            }
+          : null,
       splashColor: widget.splashColor,
       child: Container(
         width: widget.width,
         height: widget.height,
         padding: widget.padding,
         decoration: widget.decoration,
-        child: Row(
-          mainAxisAlignment: widget.align,
-          children: [
-            IconButton(
-              icon: radioGroupProvider != null
-                  ? iconExistRadioGroupProvider()
-                  : iconNotExistRadioGroupProvider(),
-              onPressed: !widget.entireTouchable ? () {
-                radioGroupProvider?.change(widget.value);
-                if (widget.onChanged != null) {
-                  widget.onChanged!(widget.value);
-                }
-              } : null,
-              highlightColor: widget.radioHighLightColor,
-              color: widget.iconColor,
-              disabledColor: widget.iconColor,
-            ),
-            widget.content,
-          ]
-        ),
+        child: Row(mainAxisAlignment: widget.align, children: [
+          IconButton(
+            icon: radioGroupProvider != null
+                ? iconExistRadioGroupProvider()
+                : iconNotExistRadioGroupProvider(),
+            onPressed: !widget.entireTouchable
+                ? () {
+                    radioGroupProvider?.change(widget.value);
+                    if (widget.onChanged != null) {
+                      widget.onChanged!(widget.value);
+                    }
+                  }
+                : null,
+            highlightColor: widget.radioHighLightColor,
+            color: widget.iconColor,
+            disabledColor: widget.iconColor,
+          ),
+          widget.content,
+        ]),
       ),
     );
   }
@@ -194,7 +195,7 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
   Widget iconExistRadioGroupProvider() {
     return ListenableBuilder(
       listenable: radioGroupProvider!,
-      builder:(context, child) => radioGroupProvider!.isEqual(widget.value)
+      builder: (context, child) => radioGroupProvider!.isEqual(widget.value)
           ? selectedIconWidget()
           : unselectedIconWidget(),
     );
@@ -203,8 +204,8 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
   Widget iconNotExistRadioGroupProvider() {
     return widget.groupId != null
         ? widget.groupId! == widget.value
-          ? selectedIconWidget()
-          : unselectedIconWidget()
+            ? selectedIconWidget()
+            : unselectedIconWidget()
         : unselectedIconWidget();
   }
 
@@ -217,7 +218,10 @@ class _RadioButtonState<T> extends State<RadioButton<T>> {
   // }
 
   Icon selectedIconWidget() {
-    return widget.selectedIcon ?? const Icon(Icons.radio_button_on_outlined,);
+    return widget.selectedIcon ??
+        const Icon(
+          Icons.radio_button_on_outlined,
+        );
   }
 
   Icon unselectedIconWidget() {

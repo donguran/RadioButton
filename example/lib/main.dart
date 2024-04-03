@@ -1,5 +1,3 @@
-import 'package:example/helper_widget/title_box_widget.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:radio_button/radio_button.dart';
 
@@ -28,7 +26,6 @@ class RadioExample extends StatefulWidget {
 }
 
 class _RadioExampleState extends State<RadioExample> {
-
   String groupId = "radio1";
   String groupId2 = "radio1";
   String groupId3 = "radio1";
@@ -51,10 +48,7 @@ class _RadioExampleState extends State<RadioExample> {
             RadioButton(value: "radio3", content: const Text("Radio3"))
           ],
         ),
-
         const Divider(),
-
-
         Text("groupId2:$groupId2"),
         RadioGroup(
           groupId: "groupId",
@@ -64,13 +58,19 @@ class _RadioExampleState extends State<RadioExample> {
             });
           },
           children: [
-            RadioButton(value: "radio1", content: const Text("Radio1"),
+            RadioButton(
+              value: "radio1",
+              content: const Text("Radio1"),
               entireTouchable: true,
             ),
-            RadioButton(value: "radio2", content: const Text("Radio2"),
+            RadioButton(
+              value: "radio2",
+              content: const Text("Radio2"),
               entireTouchable: true,
             ),
-            RadioButton(value: "radio3", content: const Text("Radio3"),
+            RadioButton(
+              value: "radio3",
+              content: const Text("Radio3"),
               entireTouchable: true,
             )
           ],

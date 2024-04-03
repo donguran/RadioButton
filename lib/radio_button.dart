@@ -5,7 +5,6 @@ export 'package:radio_button/radio/radio_button_widget.dart';
 export 'package:radio_button/radio/radio_orientation.dart';
 export 'package:radio_button/radio/radio_fit.dart';
 
-
 /** Reference.
  *  Widget Build Lifecycle
 I/flutter (22628): [RadioButton] Constructor

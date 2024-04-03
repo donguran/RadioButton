@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class TitleBoxWidget extends StatelessWidget {
-  const TitleBoxWidget(this.title, {
+  const TitleBoxWidget(
+    this.title, {
     super.key,
   });
 
@@ -12,7 +13,8 @@ class TitleBoxWidget extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-      child: Text(title,
+      child: Text(
+        title,
         style: const TextStyle(fontSize: 21.0),
         textAlign: TextAlign.center,
       ),
